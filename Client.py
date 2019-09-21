@@ -1,4 +1,4 @@
-import socket
+import socket, os
 
 IP = 'localhost'
 PORT = 80
@@ -16,7 +16,7 @@ class Client:
     def open_connection(self):
         print("[*] Waiting for Server Connection")
 
-        while self.connected == False:
+        while not self.connected:
             try:
                 self.socket.connect((self.remote_ip, self.remote_port))
                 print("[*] Server Connection Established")
@@ -35,6 +35,9 @@ class Client:
     def close_connection(self):
        self.socket.close()
        self.connected = False
+
+    def verify_connection(self):
+        return self.connected
 
 
 def handle_connecion(Client):

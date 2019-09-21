@@ -18,7 +18,7 @@ class Server:
         self.socket.bind((self.remote_ip, self.remote_port))
         self.socket.listen(1)
 
-        while self.connected == False:
+        while not self.connected:
             try:
                 self.addr = self.socket.accept()
                 print("[*] Connected to Client at " + str(self.addr))
@@ -38,6 +38,9 @@ class Server:
     def close_connection(self):
        self.socket.close()
        self.connected = False
+
+    def verify_connection(self):
+        return self.connected
 
 
 def handle_connection(Server):
