@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 @app.route("/own_board", methods=['GET', 'POST'])
 def own_board_page():
-    b.update_own_board(2, 2)
+    # b.update_own_board(2, 4)
     s = ''
     for row in b.get_own_board():
         s += '\n'

@@ -31,6 +31,13 @@ def get_opponent_board():
 def update_own_board(x, y):
     own_board[x][y] = 'H'
 
+    with open("board.txt", "w") as board:
+        for i in range(10):
+            board.write('\n')
+            for j in range(10):
+                board.write(own_board[i][j])
+    board.close()
+
 
 def update_opponent_board(x, y, result):
     if result == 'h':
