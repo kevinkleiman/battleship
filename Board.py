@@ -28,6 +28,10 @@ def get_opponent_board():
     return opponent_board
 
 
+def update_own_board(x, y):
+    own_board[x][y] = 'H'
+
+
 def update_opponent_board(x, y, result):
     if result == 'h':
         opponent_board[x][y] = 'H'
