@@ -1,60 +1,56 @@
-import socket
+from flask import Flask
+import Board as b
+import Client as c
 
-IP = 'localhost'
-PORT = 80
-BUFFER_SIZE = 1024
+IP = ''
+PORT = 5000
+
 
 class Server:
-    def __init__(self, remote_ip, remote_port):
-        self.connected = False
-        self.remote_ip = remote_ip
-        self.remote_port = remote_port
-        # self.local_ip = local_ip
-        # self.local_port = local_port
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    def open_connection(self):
-        print("[*] Waiting for Client Connection")
-        self.socket.bind((self.remote_ip, self.remote_port))
-        self.socket.listen(1)
-
-        while not self.connected:
-            try:
-                self.addr = self.socket.accept()
-                print("[*] Connected to Client at " + str(self.addr))
-                self.connected = True
-
-            except ConnectionRefusedError:
-                pass
+    def __init__(self, ip):
+        self.ip = ip
 
 
-    def send_message(self, message):
-        if self.connected:
-            self.socket.send(message)
+    def fire(self, x, y):
+        c.fire(x, y)
 
-    def receive(self, buffer_size):
-        return self.addr.recv(buffer_size)
+    def result(self):
+        pass
 
-    def close_connection(self):
-       self.socket.close()
-       self.connected = False
+    def setup(self):
+        self.ip = input("Enter Opponent's IP address: ")
 
-    def verify_connection(self):
-        return self.connected
+    def get_ip(self):
+        return self.ip
 
 
-def handle_connection(Server):
-    print("Client: " + Server.receive(BUFFER_SIZE))
-
-    message = ""
-    while message != "quit":
-        message = input(">> ")
-        Server.send_message(message)
-        Server.receive(BUFFER_SIZE)
+app = Flask(__name__)
 
 
-if __name__ == '__main__':
-    connection = Server(IP, PORT)
-    connection.open_connection()
-    handle_connection(connection)
+@app.route("/own_board", methods=['GET', 'POST'])
+def own_board_page():
+    s = ''
+    for row in b.get_own_board():
+        s += '\n'
+        for ch in row:
+            s += ch
+    return s
+
+
+@app.route("/opponent_board")
+def opponent_board_page():
+    s = ''
+    for row in b.get_opponent_board():
+        s += '\n'
+        for ch in row:
+            s += ch
+    return s
+
+
+
+if __name__ == "__main__":
+    b.create_opponent_board()
+    b.read_own_board()
+
+    app.run(debug=True, host="0.0.0.0", port=80)
 
