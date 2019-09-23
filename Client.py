@@ -2,19 +2,21 @@ import http.client
 import sys
 
 
-def get_r1():
+
+def fire():
+    global R1
     try:
         connection = http.client.HTTPConnection(IP + ':' + PORT)
         connection.request("GET", "/x=" + X + "&y=" + Y)
-        r1 = connection.getresponse()
-        return r1
+        R1 = connection.getresponse()
 
     except Exception:
         print('Error, Connection Refused')
 
 
-def get_response(r1):
-    result = r1.read()
+def get_response():
+    global R1
+    result = R1.read()
     coor = []
     if '1' in str(result):
         coor.append(X)
@@ -30,4 +32,5 @@ if __name__ == '__main__':
     PORT = sys.argv[2]
     X = sys.argv[3]
     Y = sys.argv[4]
+    fire()
 

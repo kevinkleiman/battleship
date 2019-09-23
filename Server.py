@@ -28,7 +28,7 @@ def opponent_board_page():
         s += '\n'
         for ch in row:
             s += ch
-    update_opponent_board(c.get_response(c.get_r1())[0], c.get_response(c.get_r1())[1])
+    update_opponent_board(c.get_response()[0], c.get_response()[1])
     return render_template("opponent_board.html", opponent_board=s)
 
 
