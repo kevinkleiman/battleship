@@ -28,6 +28,7 @@ def opponent_board_page():
         s += '\n'
         for ch in row:
             s += ch
+    update_opponent_board(c.get_response(c.get_r1())[0], c.get_response(c.get_r1())[1])
     return render_template("opponent_board.html", opponent_board=s)
 
 
@@ -68,10 +69,10 @@ def update_own_board(x, y):
         board.close()
 
 
-def update_opponent_board(x, y, result):
-    if result == 'h':
+def update_opponent_board(x, y):
+    if x != -1:
         opponent_board[x][y] = 'H'
-    if result == 'm':
+    else:
         opponent_board[x][y] = 'M'
 
 
