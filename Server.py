@@ -12,23 +12,25 @@ app = Flask(__name__)
 
 @app.route("/own_board.html", methods=['GET', 'POST'])
 def own_board_page():
-    update_own_board(2, 5)
-    s = ''
+    s = '<table>'
     for row in get_own_board():
-        s += '\n'
+        s += '<tr>'
         for ch in row:
-            s += ch
+            s += "<td>{}</td>".format(ch)
+        s += "</tr>"
+    s += "</table>"
     return render_template("own_board.html", own_board=s)
 
 
 @app.route("/opponent_board.html")
 def opponent_board_page():
-    s = ''
+    s = '<table>'
     for row in get_opponent_board():
-        s += '\n'
+        s += '<tr>'
         for ch in row:
-            s += ch
-    update_opponent_board(2, 3)
+            s += "<td>{}</td>".format(ch)
+        s += "</tr>"
+    s += "</table>"
     return render_template("opponent_board.html", opponent_board=s)
 
 
