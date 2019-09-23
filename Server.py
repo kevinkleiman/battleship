@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route("/own_board.html", methods=['GET', 'POST'])
 def own_board_page():
-    update_own_board(2, 4)
+    update_own_board(2, 5)
     s = ''
     for row in get_own_board():
         s += '\n'
@@ -63,10 +63,10 @@ def update_own_board(x, y):
 
     with open("board.txt", "w") as board:
         for i in range(10):
-            board.write('\n')
+            if i != 0:
+                board.write('\n')
             for j in range(10):
                 board.write(own_board[i][j])
-        board.close()
 
 
 def update_opponent_board(x, y):

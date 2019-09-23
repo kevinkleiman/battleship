@@ -2,7 +2,6 @@ import http.client
 import sys
 
 
-
 def fire():
     global R1
     try:
