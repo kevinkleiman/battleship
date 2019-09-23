@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 import sys
-from http.server import HTTPServer
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import Client as c
 
 PORT = sys.argv[1]
@@ -13,8 +13,6 @@ app = Flask(__name__)
 
 @app.route("/own_board.html", methods=['GET', 'POST'])
 def own_board_page():
-    server = HTTPServer
-    server.serve_forever()
     s = '<table>'
     for row in get_own_board():
         s += '<tr>'
@@ -22,8 +20,6 @@ def own_board_page():
             s += "<td>{}</td>".format(ch)
         s += "</tr>"
     s += "</table>"
-    receive_hit(c.get_coor()[0], c.get_coor()[1], server)
-    server.server_close()
     return render_template("own_board.html", own_board=s)
 
 
@@ -39,13 +35,13 @@ def opponent_board_page():
     return render_template("opponent_board.html", opponent_board=s)
 
 
-def receive_hit(x, y, server):
-    if own_board[x][y] != '_' or own_board[x][y] != 'H':
-        server.send_response(200)
-    elif own_board[x][y] == 'H':
-        server.send_response(410)
-    else:
-        server.send_response(400)
+class Server(BaseHTTPRequestHandler):
+    def do_GET(self):
+        try:
+            self.send_response(200)
+        except:
+            self.send_response(404)
+        self.end_headers()
 
 
 def read_own_board():
