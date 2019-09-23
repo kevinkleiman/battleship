@@ -1,7 +1,6 @@
 from flask import Flask, render_template
 import sys
 from http.server import HTTPServer, BaseHTTPRequestHandler
-import Client as c
 
 PORT = sys.argv[1]
 FILE_NAME = sys.argv[2]
@@ -17,7 +16,7 @@ def own_board_page():
     for row in get_own_board():
         s += '<tr>'
         for ch in row:
-            s += "<td>{}</td>".format(ch)
+            s += '<td style="font-size:35px">{}</td>'.format(ch)
         s += "</tr>"
     s += "</table>"
     return render_template("own_board.html", own_board=s)
@@ -29,7 +28,7 @@ def opponent_board_page():
     for row in get_opponent_board():
         s += '<tr>'
         for ch in row:
-            s += "<td>{}</td>".format(ch)
+            s += '<td style="font-size:35px">{}</td>'.format(ch)
         s += "</tr>"
     s += "</table>"
     return render_template("opponent_board.html", opponent_board=s)
@@ -89,10 +88,13 @@ def update_own_board(x, y):
 
 
 def update_opponent_board(x, y):
-    if x != -1:
-        opponent_board[x][y] = 'H'
-    else:
-        opponent_board[x][y] = 'M'
+    try:
+        if x != -1:
+            opponent_board[x][y] = 'H'
+        else:
+            opponent_board[x][y] = 'M'
+    except IndexError:
+        print("f")
 
     with open("opponent_board.txt", "w") as board:
         for i in range(10):
@@ -103,6 +105,6 @@ def update_opponent_board(x, y):
 
 
 if __name__ == "__main__":
-    create_opponent_board()
+    # create_opponent_board()
     read_own_board()
     app.run(debug=True, host="0.0.0.0", port=5000)
