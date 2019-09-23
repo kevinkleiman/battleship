@@ -18,7 +18,6 @@ def own_board_page():
         s += '\n'
         for ch in row:
             s += ch
-    3
     return render_template("own_board.html", own_board=s)
 
 
@@ -29,7 +28,7 @@ def opponent_board_page():
         s += '\n'
         for ch in row:
             s += ch
-    return s
+    return render_template("opponent_board.html", opponent_board=s)
 
 
 def read_own_board():
@@ -66,7 +65,7 @@ def update_own_board(x, y):
             board.write('\n')
             for j in range(10):
                 board.write(own_board[i][j])
-    board.close()
+        board.close()
 
 
 def update_opponent_board(x, y, result):

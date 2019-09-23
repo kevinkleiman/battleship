@@ -28,3 +28,7 @@ def fire():
     except Exception:
         print('Error, Connection Refused')
 
+
+if __name__ == '__main__':
+    fire()
+
