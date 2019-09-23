@@ -28,7 +28,7 @@ def opponent_board_page():
         s += '\n'
         for ch in row:
             s += ch
-    update_opponent_board(c.get_response()[0], c.get_response()[1])
+    update_opponent_board(2, 3)
     return render_template("opponent_board.html", opponent_board=s)
 
 
@@ -49,6 +49,13 @@ def create_opponent_board():
             row.append("_")
         opponent_board.append(row)
 
+    with open("opponent_board.txt", "w") as board:
+        for i in range(10):
+            if i != 0:
+                board.write('\n')
+            for j in range(10):
+                board.write(opponent_board[i][j])
+
 
 def get_own_board():
     return own_board
@@ -61,7 +68,7 @@ def get_opponent_board():
 def update_own_board(x, y):
     own_board[x][y] = 'H'
 
-    with open("board.txt", "w") as board:
+    with open(FILE_NAME, "w") as board:
         for i in range(10):
             if i != 0:
                 board.write('\n')
@@ -74,6 +81,13 @@ def update_opponent_board(x, y):
         opponent_board[x][y] = 'H'
     else:
         opponent_board[x][y] = 'M'
+
+    with open("opponent_board.txt", "w") as board:
+        for i in range(10):
+            if i != 0:
+                board.write('\n')
+            for j in range(10):
+                board.write(opponent_board[i][j])
 
 
 if __name__ == "__main__":
