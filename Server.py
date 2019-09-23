@@ -1,37 +1,83 @@
-from flask import Flask
-import Board as b
+from flask import Flask, render_template
+import sys
 import Client as c
 
-IP = ''
-PORT = 5000
-
+PORT = sys.argv[1]
+FILE_NAME = sys.argv[2]
+own_board = []
+opponent_board = []
 
 app = Flask(__name__)
 
 
-@app.route("/own_board", methods=['GET', 'POST'])
+@app.route("/own_board.html", methods=['GET', 'POST'])
 def own_board_page():
-    # b.update_own_board(2, 4)
+    update_own_board(2, 4)
     s = ''
-    for row in b.get_own_board():
+    for row in get_own_board():
         s += '\n'
         for ch in row:
             s += ch
-    return s
+    3
+    return render_template("own_board.html", own_board=s)
 
 
-@app.route("/opponent_board")
+@app.route("/opponent_board.html")
 def opponent_board_page():
     s = ''
-    for row in b.get_opponent_board():
+    for row in get_opponent_board():
         s += '\n'
         for ch in row:
             s += ch
     return s
+
+
+def read_own_board():
+    with open(FILE_NAME) as fileobj:
+        for line in fileobj:
+            row = []
+            for ch in line:
+                if ch != '\n':
+                    row.append(ch)
+            own_board.append(row)
+
+
+def create_opponent_board():
+    for i in range(10):
+        row = []
+        for j in range(10):
+            row.append("_")
+        opponent_board.append(row)
+
+
+def get_own_board():
+    return own_board
+
+
+def get_opponent_board():
+    return opponent_board
+
+
+def update_own_board(x, y):
+    own_board[x][y] = 'H'
+
+    with open("board.txt", "w") as board:
+        for i in range(10):
+            board.write('\n')
+            for j in range(10):
+                board.write(own_board[i][j])
+    board.close()
+
+
+def update_opponent_board(x, y, result):
+    if result == 'h':
+        opponent_board[x][y] = 'H'
+    if result == 'm':
+        opponent_board[x][y] = 'M'
 
 
 if __name__ == "__main__":
-    b.create_opponent_board()
-    b.read_own_board()
-    app.run(debug=True, host="0.0.0.0", port=80)
+    create_opponent_board()
+    read_own_board()
+    app.run(debug=True, host="0.0.0.0", port=5000)
 
