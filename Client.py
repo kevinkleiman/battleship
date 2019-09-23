@@ -2,34 +2,30 @@ import http.client
 import sys
 
 
-def fire():
-    global R1
+coor = []
+
+
+def fire(x, y, ip, port):
     try:
-        connection = http.client.HTTPConnection(IP + ':' + PORT)
-        connection.request("GET", "/x=" + X + "&y=" + Y)
-        R1 = connection.getresponse()
+        connection = http.client.HTTPConnection(ip + ':' + port)
+        connection.request("GET", "/x=" + x + "&y=" + y)
+        r1 = connection.getresponse()
+        result = r1.read()
+        if r1.status == '200':
+            coor.append(x)
+            coor.append(y)
+        elif r1.status == '410':
+            print('You have already fired to this location')
+            coor.append(-1)
 
     except Exception:
         print('Error, Connection Refused')
 
 
-def get_response():
-    global R1
-    result = R1.read()
-    coor = []
-    if '1' in str(result):
-        coor.append(X)
-        coor.append(Y)
-        return coor
-    if '0' in str(result):
-        coor.append(-1)
-        return coor
+def get_coor():
+    return coor
 
 
 if __name__ == '__main__':
-    IP = sys.argv[1]
-    PORT = sys.argv[2]
-    X = sys.argv[3]
-    Y = sys.argv[4]
-    fire()
+    fire(sys.argv[3], sys.argv[4], sys.argv[1], sys.argv[2])
 

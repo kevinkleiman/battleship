@@ -22,7 +22,7 @@ def own_board_page():
             s += "<td>{}</td>".format(ch)
         s += "</tr>"
     s += "</table>"
-    receive_hit(c.get_response()[0], c.get_response()[1], server)
+    receive_hit(c.get_coor()[0], c.get_coor()[1], server)
     server.server_close()
     return render_template("own_board.html", own_board=s)
 
