@@ -24,12 +24,11 @@ def own_board_page():
     return render_template("own_board.html", own_board=s)
 
 
-@app.route("/x=2&y=5", methods=['GET', 'POST'])
-def handle_fire():
+@app.route("/x=<x>&y=<y>", methods=['GET', 'POST'])
+def handle_fire(x, y):
     if request.method == 'POST':
-        print('hello')
-        update_own_board(2, 5)
-    return render_template('x=2&y=5.html')
+        update_own_board(int(x), int(y))
+    return render_template('handle_connection.html')
 
 
 @app.route("/opponent_board.html")
@@ -125,6 +124,4 @@ def create_opponent_board():
 if __name__ == "__main__":
     read_own_board()
     create_opponent_board()
-    update_own_board(2, 6)
-    print(own_board)
     app.run(debug=True, host="0.0.0.0", port=5000)
