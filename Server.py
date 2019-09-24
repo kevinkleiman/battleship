@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 @app.route("/own_board.html", methods=['GET', 'POST'])
 def own_board_page():
+    read_own_board()
     s = '<table>'
     for row in get_own_board():
         s += '<tr>'
@@ -24,6 +25,7 @@ def own_board_page():
 
 @app.route("/opponent_board.html")
 def opponent_board_page():
+    read_opponent_board()
     s = '<table>'
     for row in opponent_board:
         s += '<tr>'
@@ -54,13 +56,17 @@ def read_own_board():
 
 
 def read_opponent_board():
+    temp = []
     with open("opponent_board.txt") as fileobj:
         for line in fileobj:
             row = []
             for ch in line:
                 if ch != '\n':
                     row.append(ch)
-            opponent_board.append(row)
+            temp.append(row)
+    for i in range(10):
+        for j in range(10):
+            opponent_board[i][j] = temp[i][j]
 
 
 def get_own_board():
@@ -78,7 +84,21 @@ def update_own_board(x, y):
                 board.write(own_board[i][j])
 
 
+def create_opponent_board():
+    for i in range(10):
+        row = []
+        for j in range(10):
+            row.append("_")
+        opponent_board.append(row)
+
+    with open("opponent_board.txt", "w") as board:
+        for i in range(10):
+            if i != 0:
+                board.write('\n')
+            for j in range(10):
+                board.write(opponent_board[i][j])
+
+
 if __name__ == "__main__":
-    read_own_board()
-    read_opponent_board()
+    create_opponent_board()
     app.run(debug=True, host="0.0.0.0", port=5000)

@@ -6,6 +6,7 @@ opponent_board = []
 
 
 def fire(x, y, ip, port):
+    update_opponent_board(int(x), int(y))
     try:
         connection = http.client.HTTPConnection(ip + ':' + port)
         connection.request("GET", "/x=" + x + "&y=" + y)
@@ -28,22 +29,17 @@ def update_opponent_board(x, y):
         else:
             opponent_board[x][y] = 'M'
     except IndexError:
-        print("f")
-
-    with open("opponent_board.txt", "w") as board:
-        for i in range(10):
-            if i != 0:
-                board.write('\n')
-            for j in range(10):
-                board.write(opponent_board[i][j])
-
-
-def create_opponent_board():
-    for i in range(10):
-        row = []
-        for j in range(10):
-            row.append("_")
-        opponent_board.append(row)
+        with open("opponent_board.txt") as fileobj:
+            for line in fileobj:
+                row = []
+                for ch in line:
+                    if ch != '\n':
+                        row.append(ch)
+                opponent_board.append(row)
+        if x != -1:
+            opponent_board[x][y] = 'H'
+        else:
+            opponent_board[x][y] = 'M'
 
     with open("opponent_board.txt", "w") as board:
         for i in range(10):
