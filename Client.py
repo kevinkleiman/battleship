@@ -10,10 +10,9 @@ def fire(x, y, ip, port):
         connection = http.client.HTTPConnection(ip + ':' + port)
         connection.request('POST', "/x=" + x + "&y=" + y)
         r1 = connection.getresponse()
-        result = r1.read()
-        if r1.status == '200':
+        if r1.status == 200:
             update_opponent_board(int(x), int(y))
-        elif r1.status == '410':
+        elif r1.status == 410:
             print('You have already fired to this location')
             update_opponent_board(-1, -1)
 
