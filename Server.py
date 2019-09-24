@@ -25,7 +25,7 @@ def own_board_page():
 @app.route("/opponent_board.html")
 def opponent_board_page():
     s = '<table>'
-    for row in get_opponent_board():
+    for row in opponent_board:
         s += '<tr>'
         for ch in row:
             s += '<td style="font-size:35px">{}</td>'.format(ch)
@@ -53,27 +53,18 @@ def read_own_board():
             own_board.append(row)
 
 
-def create_opponent_board():
-    for i in range(10):
-        row = []
-        for j in range(10):
-            row.append("_")
-        opponent_board.append(row)
-
-    with open("opponent_board.txt", "w") as board:
-        for i in range(10):
-            if i != 0:
-                board.write('\n')
-            for j in range(10):
-                board.write(opponent_board[i][j])
+def read_opponent_board():
+    with open("opponent_board.txt") as fileobj:
+        for line in fileobj:
+            row = []
+            for ch in line:
+                if ch != '\n':
+                    row.append(ch)
+            opponent_board.append(row)
 
 
 def get_own_board():
     return own_board
-
-
-def get_opponent_board():
-    return opponent_board
 
 
 def update_own_board(x, y):
@@ -87,24 +78,7 @@ def update_own_board(x, y):
                 board.write(own_board[i][j])
 
 
-def update_opponent_board(x, y):
-    try:
-        if x != -1:
-            opponent_board[x][y] = 'H'
-        else:
-            opponent_board[x][y] = 'M'
-    except IndexError:
-        print("f")
-
-    with open("opponent_board.txt", "w") as board:
-        for i in range(10):
-            if i != 0:
-                board.write('\n')
-            for j in range(10):
-                board.write(opponent_board[i][j])
-
-
 if __name__ == "__main__":
-    # create_opponent_board()
     read_own_board()
+    read_opponent_board()
     app.run(debug=True, host="0.0.0.0", port=5000)
