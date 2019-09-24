@@ -43,56 +43,57 @@ def own_board_page():
 def handle_fire(x, y):
     global C, B, R, S, D, SUNK, OUTCOME
     if request.method == 'POST':
-        if own_board[int(x)][int(y)] == '_':
-            response = app.response_class(status=200, response='hit=0')
-            update_own_board(int(x), int(y), 'm')
-        elif own_board[int(x)][int(y)] == 'H' or own_board[int(x)][int(y)] == 'M':
-            response = app.response_class(status=410)
-        elif own_board[int(x)][int(y)] == 'C':
-            C += 1
-            if C == 5:
-                SUNK += 1
-                response = app.response_class(status=200, response='hit=1/&sink=C')
-            else:
-                response = app.response_class(status=200, response='hit=1')
-            update_own_board(int(x), int(y), 'h')
-        elif own_board[int(x)][int(y)] == 'B':
-            B += 1
-            if B == 4:
-                SUNK += 1
-                response = app.response_class(status=200, response='hit=1/&sink=B')
-            else:
-                response = app.response_class(status=200, response='hit=1')
-            update_own_board(int(x), int(y), 'h')
-        elif own_board[int(x)][int(y)] == 'R':
-            R += 1
-            if R == 3:
-                SUNK += 1
-                response = app.response_class(status=200, response='hit=1/&sink=R')
-            else:
-                response = app.response_class(status=200, response='hit=1')
-            update_own_board(int(x), int(y), 'h')
-        elif own_board[int(x)][int(y)] == 'S':
-            S += 1
-            if S == 3:
-                SUNK += 1
-                response = app.response_class(status=200, response='hit=1/&sink=S')
-            else:
-                response = app.response_class(status=200, response='hit=1')
-            update_own_board(int(x), int(y), 'h')
-        elif own_board[int(x)][int(y)] == 'D':
-            D += 1
-            if D == 2:
-                SUNK += 1
-                response = app.response_class(status=200, response='hit=1/&sink=D')
-            else:
-                response = app.response_class(status=200, response='hit=1')
-            update_own_board(int(x), int(y), 'h')
-    print(SUNK)
-    if SUNK == 1:
-        response = app.response_class(status=200, response='win')
-        OUTCOME = 'lose'
-        return response
+        try:
+            if own_board[int(x)][int(y)] == '_':
+                response = app.response_class(status=200, response='hit=0')
+                update_own_board(int(x), int(y), 'm')
+            elif own_board[int(x)][int(y)] == 'H' or own_board[int(x)][int(y)] == 'M':
+                response = app.response_class(status=410)
+            elif own_board[int(x)][int(y)] == 'C':
+                C += 1
+                if C == 5:
+                    SUNK += 1
+                    response = app.response_class(status=200, response='hit=1/&sink=C')
+                else:
+                    response = app.response_class(status=200, response='hit=1')
+                update_own_board(int(x), int(y), 'h')
+            elif own_board[int(x)][int(y)] == 'B':
+                B += 1
+                if B == 4:
+                    SUNK += 1
+                    response = app.response_class(status=200, response='hit=1/&sink=B')
+                else:
+                    response = app.response_class(status=200, response='hit=1')
+                update_own_board(int(x), int(y), 'h')
+            elif own_board[int(x)][int(y)] == 'R':
+                R += 1
+                if R == 3:
+                    SUNK += 1
+                    response = app.response_class(status=200, response='hit=1/&sink=R')
+                else:
+                    response = app.response_class(status=200, response='hit=1')
+                update_own_board(int(x), int(y), 'h')
+            elif own_board[int(x)][int(y)] == 'S':
+                S += 1
+                if S == 3:
+                    SUNK += 1
+                    response = app.response_class(status=200, response='hit=1/&sink=S')
+                else:
+                    response = app.response_class(status=200, response='hit=1')
+                update_own_board(int(x), int(y), 'h')
+            elif own_board[int(x)][int(y)] == 'D':
+                D += 1
+                if D == 2:
+                    SUNK += 1
+                    response = app.response_class(status=200, response='hit=1/&sink=D')
+                else:
+                    response = app.response_class(status=200, response='hit=1')
+                update_own_board(int(x), int(y), 'h')
+        except IndexError:
+            response = app.response_class(status=404)
+        if SUNK == 5:
+            response = app.response_class(status=200, response='win')
+            OUTCOME = 'lose'
     return response
 
 
