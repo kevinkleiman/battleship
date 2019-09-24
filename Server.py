@@ -1,16 +1,17 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import sys
-from http.server import HTTPServer, BaseHTTPRequestHandler
 
 PORT = sys.argv[1]
 FILE_NAME = sys.argv[2]
 own_board = []
 opponent_board = []
+X = ' '
+Y = ' '
 
 app = Flask(__name__)
 
 
-@app.route("/own_board.html", methods=['GET', 'POST'])
+@app.route("/own_board.html")
 def own_board_page():
     read_own_board()
     s = '<table>'
@@ -21,6 +22,14 @@ def own_board_page():
         s += "</tr>"
     s += "</table>"
     return render_template("own_board.html", own_board=s)
+
+
+@app.route("/x=2&y=5", methods=['GET', 'POST'])
+def handle_fire():
+    if request.method == 'POST':
+        print('hello')
+        update_own_board(2, 5)
+    return render_template('x=2&y=5.html')
 
 
 @app.route("/opponent_board.html")
@@ -36,23 +45,27 @@ def opponent_board_page():
     return render_template("opponent_board.html", opponent_board=s)
 
 
-class Server(BaseHTTPRequestHandler):
-    def do_GET(self):
-        try:
-            self.send_response(200)
-        except:
-            self.send_response(404)
-        self.end_headers()
-
-
 def read_own_board():
-    with open(FILE_NAME) as fileobj:
-        for line in fileobj:
-            row = []
-            for ch in line:
-                if ch != '\n':
-                    row.append(ch)
-            own_board.append(row)
+    try:
+        temp = []
+        with open(FILE_NAME) as fileobj:
+            for line in fileobj:
+                row = []
+                for ch in line:
+                    if ch != '\n':
+                        row.append(ch)
+                temp.append(row)
+        for i in range(10):
+            for j in range(10):
+                own_board[i][j] = temp[i][j]
+    except IndexError:
+        with open(FILE_NAME) as fileobj:
+            for line in fileobj:
+                row = []
+                for ch in line:
+                    if ch != '\n':
+                        row.append(ch)
+                own_board.append(row)
 
 
 def read_opponent_board():
@@ -74,8 +87,18 @@ def get_own_board():
 
 
 def update_own_board(x, y):
+    temp = []
+    with open(FILE_NAME) as fileobj:
+        for line in fileobj:
+            row = []
+            for ch in line:
+                if ch != '\n':
+                    row.append(ch)
+            temp.append(row)
+    for i in range(10):
+        for j in range(10):
+            own_board[i][j] = temp[i][j]
     own_board[x][y] = 'H'
-
     with open(FILE_NAME, "w") as board:
         for i in range(10):
             if i != 0:
@@ -100,5 +123,8 @@ def create_opponent_board():
 
 
 if __name__ == "__main__":
+    read_own_board()
     create_opponent_board()
+    update_own_board(2, 6)
+    print(own_board)
     app.run(debug=True, host="0.0.0.0", port=5000)

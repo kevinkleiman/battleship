@@ -6,14 +6,13 @@ opponent_board = []
 
 
 def fire(x, y, ip, port):
-    update_opponent_board(int(x), int(y))
     try:
         connection = http.client.HTTPConnection(ip + ':' + port)
-        connection.request("GET", "/x=" + x + "&y=" + y)
+        connection.request('POST', "/x=" + x + "&y=" + y)
         r1 = connection.getresponse()
         result = r1.read()
         if r1.status == '200':
-            update_opponent_board(x, y)
+            update_opponent_board(int(x), int(y))
         elif r1.status == '410':
             print('You have already fired to this location')
             update_opponent_board(-1, -1)
