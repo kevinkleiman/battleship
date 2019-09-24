@@ -11,16 +11,18 @@ def fire(x, y, ip, port):
         connection.request('POST', "/x=" + x + "&y=" + y)
         r1 = connection.getresponse()
         if r1.status == 200:
-            update_opponent_board(int(x), int(y))
+            update_opponent_board(int(x), int(y), 'h')
         elif r1.status == 410:
             print('You have already fired to this location')
-            update_opponent_board(-1, -1)
+            update_opponent_board(int(x), int(y), 'x')
+        elif r1.status == 204:
+            update_opponent_board(int(x), int(y), 'm')
 
-    except Exception:
+    except ConnectionRefusedError:
         print('Error, Connection Refused')
 
 
-def update_opponent_board(x, y):
+def update_opponent_board(x, y, result):
     try:
         if x != -1:
             opponent_board[x][y] = 'H'
@@ -34,10 +36,12 @@ def update_opponent_board(x, y):
                     if ch != '\n':
                         row.append(ch)
                 opponent_board.append(row)
-        if x != -1:
+        if result == 'h':
             opponent_board[x][y] = 'H'
-        else:
+        elif result == 'm':
             opponent_board[x][y] = 'M'
+        elif result == 'x':
+            pass
 
     with open("opponent_board.txt", "w") as board:
         for i in range(10):

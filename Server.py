@@ -15,7 +15,7 @@ app = Flask(__name__)
 def own_board_page():
     read_own_board()
     s = '<table>'
-    for row in get_own_board():
+    for row in own_board:
         s += '<tr>'
         for ch in row:
             s += '<td style="font-size:35px">{}</td>'.format(ch)
@@ -27,8 +27,15 @@ def own_board_page():
 @app.route("/x=<x>&y=<y>", methods=['GET', 'POST'])
 def handle_fire(x, y):
     if request.method == 'POST':
-        update_own_board(int(x), int(y))
-    return render_template('handle_connection.html')
+        response = app.response_class(status=404)
+        if own_board[int(x)][int(y)] == '_':
+            response = app.response_class(status=204)
+            update_own_board(int(x), int(y))
+        elif own_board[int(x)][int(y)] == 'H' or own_board[int(x)][int(y)] == 'M':
+            response = app.response_class(status=410)
+        else:
+            response = app.response_class(status=200)
+    return response
 
 
 @app.route("/opponent_board.html")
@@ -81,10 +88,6 @@ def read_opponent_board():
             opponent_board[i][j] = temp[i][j]
 
 
-def get_own_board():
-    return own_board
-
-
 def update_own_board(x, y):
     temp = []
     with open(FILE_NAME) as fileobj:
@@ -97,7 +100,10 @@ def update_own_board(x, y):
     for i in range(10):
         for j in range(10):
             own_board[i][j] = temp[i][j]
-    own_board[x][y] = 'H'
+    if own_board[x][y] != '_':
+        own_board[x][y] = 'H'
+    else:
+        own_board[x][y] = 'M'
     with open(FILE_NAME, "w") as board:
         for i in range(10):
             if i != 0:
