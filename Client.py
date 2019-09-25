@@ -11,6 +11,7 @@ opponent_board = []
 
 def fire(x, y, ip, port):
     try:
+
         connection = http.client.HTTPConnection(ip + ':' + port)
         connection.request('POST', "/x=" + x + "&y=" + y)
         r1 = connection.getresponse()

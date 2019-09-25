@@ -44,6 +44,13 @@ def handle_fire(x, y):
     global C, B, R, S, D, SUNK, OUTCOME
     if request.method == 'POST':
         try:
+            if int(x) > 10 or int(y) > 10:
+                response = app.response_class(status=400)
+                return response
+        except Exception:
+            response = app.response_class(status=400)
+            return response
+        try:
             if own_board[int(x)][int(y)] == '_':
                 response = app.response_class(status=200, response='hit=0')
                 update_own_board(int(x), int(y), 'm')
